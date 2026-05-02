@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CSV Selector</title>
+</head>
+<body>
+<h3>CSV ile Obje Seç</h3>
+
+<input type="file" id="fileInput" />
+
+<script>
+document.getElementById('fileInput').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  const reader = new FileReader();
+
+  reader.onload = function(event) {
+    const text = event.target.result;
+    const lines = text.split("\n").map(x => x.trim());
+
+    console.log("CSV List:", lines);
+
+    // TRIMBLE VIEWER API
+    if (window.parent && window.parent.postMessage) {
+      window.parent.postMessage({
+        type: "selectByProperty",
+        values: lines
+      }, "*");
+    }
+  };
+
+  reader.readAsText(file);
+});
+</script>
+
+</body>
+</html>
